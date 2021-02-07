@@ -11,7 +11,7 @@
 * [How to get](#how-to-get)
 
 ## General info
-This project is create an canvas for draw an sketch.
+This project is create an canvas for draw an different type of widgets.
 
 ## Technologies
 This project is created with:
