@@ -1,4 +1,4 @@
 # canvas_editor_p5js
-## p5js libs
+## using p5js library
 it creates a canvas for p5js editorial.
 
