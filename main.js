@@ -17,10 +17,13 @@ function draw() {
     for (var particals = 0; particals < boxLength; particals++) {
         for (var other = 0; other < boxLength; other++) {
             if (particals !== other) {
-                //w[particals].connect(w[other]);
+                dist = w[particals].checkDist(w[other]);
+                if (dist <= 50) {
+                    w[particals].connect(w[other]);
+                }
             }
         }
-        w[particals].show();
         w[particals].update();
+        w[particals].show();
     }
 }

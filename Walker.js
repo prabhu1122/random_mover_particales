@@ -1,5 +1,6 @@
 var angle = 3;
-var strok = 1;
+var strok = 4;
+var lifespan = 255;
 class walker {
     constructor(x, y) {
         this.pos = createVector(x, y);
@@ -33,15 +34,14 @@ class walker {
             this.vel.mult(0);
         }
         this.connect = function(other) {
-            stroke(200);
-            strokeWeight(2);
-            line(this.x, this.y, other.x, other.y);
+            stroke(200,lifespan);
+            strokeWeight(1);
+            line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
         }
 
         this.checkDist = function(other) {
-            // body...
-            var dx = other.x - this.x;
-            var dy = other.y - this.y;
+            var dx = this.pos.x - other.pos.x;
+            var dy = this.pos.y - other.pos.y;
             var dist = Math.sqrt(Math.pow(dx, 2), Math.pow(dy, 2));
             return dist;
         }
