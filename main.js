@@ -1,11 +1,10 @@
+
 function setup() {
     // body...
-    createCanvas(window.innerWidth,window.innerHeight);
+    createCanvas(displayWidth, displayHeight - 80);
 }
 
 function draw() {
     // body...
     background(0);
-    
-    
 }
