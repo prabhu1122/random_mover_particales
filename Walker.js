@@ -20,7 +20,7 @@ class walker {
             ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
         }
         /*
-         * @name update
+         * @param mathod| update
          * @discription function this.update() is use as animate the sketch
          */
 
