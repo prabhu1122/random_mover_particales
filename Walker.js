@@ -3,21 +3,22 @@
 var strok = 4;
 
 class walker {
-    constructor(x, y, d) {
-        this.radius = 5;
+    constructor(x, y, d, r) {
+        this.radius = r;
         this.startConDist = d;
         this.pos = createVector(x, y);
         this.vel = createVector(random(-.51, .51), random(-.51, .51));
         //this.acc = createVector(random(-1, 1), random(-1, 1))
         this.show = function() {
             // body...
+            //fill(255);
+            noFill();
+            stroke(50);
+            strokeWeight(1);
+            ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
             strokeWeight(strok);
             stroke(10);
             point(this.pos.x, this.pos.y);
-            noFill();
-            strokeWeight(1);
-            stroke(50);
-            ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
         }
         /*
          * @param mathod| update
@@ -26,26 +27,105 @@ class walker {
 
         this.update = function() {
             this.pos.add(this.vel);
-            if (this.pos.x >= innerWidth) {
+            if (this.pos.x >= innerWidth - this.radius) {
                 this.vel.x *= -1;
                 //this.pos.x= innerWidth- this.strok;
             }
-            if (this.pos.x <= 0) {
+            if (this.pos.x <= this.radius) {
                 this.vel.x *= -1;
             }
-            if (this.pos.y >= innerHeight) {
+            if (this.pos.y >= innerHeight - this.radius) {
                 this.vel.y *= -1;
             }
-            if (this.pos.y <= 0) {
+            if (this.pos.y <= this.radius) {
                 this.vel.y *= -1;
             }
         }
+        
+        //collision resolving
+        
+        //Utility functions
+        /**
+         * Rotates coordinate system for velocities
+         *
+         * Takes velocities and alters them as if the coordinate system they're on was rotated
+         *
+         * @param  Object | velocity | The velocity of an individual particle
+         * @param  Float  | angle    | The angle of collision between two objects in radians
+         * @return Object | The altered x and y velocities after the coordinate system has been rotated
+         */
+        
+        function rotateAng(velocity, angle) {
+            const rotatedVelocities = {
+                x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
+                y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle)
+            };
+        
+            return rotatedVelocities;
+        }
+        
+        /*
+         * 
+         * Swaps out two colliding particles' x and y velocities after running through
+         * an elastic collision reaction equation
+         *
+         * @param  Object | particle      | A particle object with x and y coordinates, plus velocity
+         * @param  Object | otherParticle | An otherParticle object with x and y coordinates, plus velocity
+         * @return Null | Does not return a value
+         */
+        this.resolveCollision = function(other) {
+            const xVelocityDiff = this.vel.x - other.vel.x;
+            const yVelocityDiff = this.vel.y - other.vel.y;
+        
+            const xDist = other.pos.x - this.pos.x;
+            const yDist = other.pos.y - this.pos.y;
+        
+            // Prevent accidental overlap of particles
+            if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
+        
+                // Grab angle between the two colliding particles
+                const angle = -Math.atan2(other.pos.y - this.pos.y, other.pos.x - this.pos.x);
+        
+                // Store mass in var for better readability in collision equation
+                //const m1 = this.mass;
+                //const m2 = other.mass;
+                const m1 = 1;
+                const m2 = 1;
+                // Velocity before equation
+        
+                const u1 = rotateAng(this.vel, angle);
+                const u2 = rotateAng(other.vel, angle);
+        
+                // Velocity after 1d collision equation
+                const v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2 / (m1 + m2), y: u1.y };
+                const v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2 / (m1 + m2), y: u2.y };
+        
+                // Final velocity after rotating axis back to original location
+                const vFinal1 = rotateAng(v1, -angle);
+                const vFinal2 = rotateAng(v2, -angle);
+        
+                // Swap particle velocities for realistic bounce effect
+                this.vel.x = vFinal1.x;
+                this.vel.y = vFinal1.y;
+        
+                other.vel.x = vFinal2.x;
+                other.vel.y = vFinal2.y;
+            }
+        };
 
         this.checkDist = function(other) {
             var dx = this.pos.x - other.pos.x;
             var dy = this.pos.y - other.pos.y;
             var distance = Math.sqrt(((this.pos.x - other.pos.x) * (this.pos.x - other.pos.x)) + ((this.pos.y - other.pos.y) * (this.pos.y - other.pos.y)));
             return distance;
+        }
+        // checking the outer circle distance and return dist    
+        this.orbitCheck = function(other) {
+            
+            let dx = this.pos.x - other.pos.x;
+            let dy = this.pos.y - other.pos.y;
+            let orbitDistance = Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2));
+            return orbitDistance;
         }
 
         this.connect = function(other) {
