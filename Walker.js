@@ -3,25 +3,27 @@
 var strok = 4;
 
 class walker {
-    constructor(x, y) {
+    constructor(x, y, d) {
+        this.radius = 5;
+        this.startConDist = d;
         this.pos = createVector(x, y);
         this.vel = createVector(random(-.51, .51), random(-.51, .51));
         //this.acc = createVector(random(-1, 1), random(-1, 1))
         this.show = function() {
             // body...
             strokeWeight(strok);
-            stroke('#ff2626');
+            stroke(10);
             point(this.pos.x, this.pos.y);
             noFill();
             strokeWeight(1);
-            stroke('#ffb624');
-            ellipse(this.pos.x, this.pos.y, 10, 10);
+            stroke(50);
+            ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
         }
         /*
-        * @name update
-        * @discription function this.update() is use as animate the sketch
-        */
-        
+         * @name update
+         * @discription function this.update() is use as animate the sketch
+         */
+
         this.update = function() {
             this.pos.add(this.vel);
             if (this.pos.x >= innerWidth) {
@@ -43,17 +45,16 @@ class walker {
             var dx = this.pos.x - other.pos.x;
             var dy = this.pos.y - other.pos.y;
             var distance = Math.sqrt(((this.pos.x - other.pos.x) * (this.pos.x - other.pos.x)) + ((this.pos.y - other.pos.y) * (this.pos.y - other.pos.y)));
-                return distance;
-            }
+            return distance;
+        }
 
-            this.connect = function(other) {
-                let dis = this.checkDist(other);
-                let lifespan = map(dis, 50, 0, 0, 255);
-                if (dis <= 50) {
-                    stroke(200, lifespan);
-                    strokeWeight(lifespan*.01);
-                    line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
-                }
-            }
+        this.connect = function(other) {
+            let dis = this.checkDist(other);
+            let lifespan = map(dis, this.startConDist, 0, 0, 255);
+            let thikness = map(lifespan, 0,50,0,.51);
+            stroke(50, lifespan);
+            strokeWeight(thikness);
+            line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
         }
     }
+}
