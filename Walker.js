@@ -1,49 +1,59 @@
-var angle = 3;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 var strok = 4;
-var lifespan = 255;
+
 class walker {
     constructor(x, y) {
         this.pos = createVector(x, y);
-        this.vel = createVector(0, 0);
-        this.acc = createVector(random(-1, 1), random(-1, 1))
+        this.vel = createVector(random(-.51, .51), random(-.51, .51));
+        //this.acc = createVector(random(-1, 1), random(-1, 1))
         this.show = function() {
             // body...
             strokeWeight(strok);
-            stroke(200);
+            stroke('#ff2626');
             point(this.pos.x, this.pos.y);
+            noFill();
+            strokeWeight(1);
+            stroke('#ffb624');
+            ellipse(this.pos.x, this.pos.y, 10, 10);
         }
-
+        /*
+        * @name update
+        * @discription function this.update() is use as animate the sketch
+        */
+        
         this.update = function() {
-            // body...
-            this.vel.add(this.acc)
-            this.vel.rotate(random(-0.8, 0.8));
-            //this.vel.mult(.8);
             this.pos.add(this.vel);
             if (this.pos.x >= innerWidth) {
-                this.pos.x = 0;
+                this.vel.x *= -1;
+                //this.pos.x= innerWidth- this.strok;
             }
             if (this.pos.x <= 0) {
-                this.pos.x = innerWidth;
+                this.vel.x *= -1;
             }
             if (this.pos.y >= innerHeight) {
-                this.pos.y = 0;
+                this.vel.y *= -1;
             }
             if (this.pos.y <= 0) {
-                this.pos.y = innerHeight;
+                this.vel.y *= -1;
             }
-            this.vel.mult(0);
-        }
-        this.connect = function(other) {
-            stroke(200,lifespan);
-            strokeWeight(1);
-            line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
         }
 
         this.checkDist = function(other) {
             var dx = this.pos.x - other.pos.x;
             var dy = this.pos.y - other.pos.y;
-            var dist = Math.sqrt(Math.pow(dx, 2), Math.pow(dy, 2));
-            return dist;
+            var distance = Math.sqrt(((this.pos.x - other.pos.x) * (this.pos.x - other.pos.x)) + ((this.pos.y - other.pos.y) * (this.pos.y - other.pos.y)));
+                return distance;
+            }
+
+            this.connect = function(other) {
+                let dis = this.checkDist(other);
+                let lifespan = map(dis, 50, 0, 0, 255);
+                if (dis <= 50) {
+                    stroke(200, lifespan);
+                    strokeWeight(lifespan*.01);
+                    line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
+                }
+            }
         }
     }
-}
