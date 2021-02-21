@@ -35,7 +35,7 @@ class walker {
             //this.acc = p5.Vector.sub(this.mouse, this.pos);
             this.acc.setMag(.1);
             this.vel.add(this.acc);
-            this.vel.limit(4);
+            this.vel.limit(3);
             this.pos.add(this.vel);
             
             if (this.pos.x >= innerWidth - this.radius) {
