@@ -1,14 +1,14 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var wkr = [];
-var boxLength = 80;
+var boxSize = 8;
 var dis;
 var radius = 5;
-var startDis = 50;
+var startDis = 40;
 
 function setup() {
     // body...
     createCanvas(displayWidth, displayHeight - 80);
-    for (var particals = 0; particals < boxLength; particals++) {
+    for (var particals = 0; particals < boxSize; particals++) {
         wkr.push(new walker(random(radius, width - radius), random(radius, height - radius), startDis, radius));
     }
 }
@@ -24,12 +24,13 @@ function draw() {
                     wkr[particals].resolveCollision(wkr[other]);
                 }
                 wkr[particals].connect(wkr[other]);
+                wkr[particals].attract(wkr[other]);
             }
         }
         wkr[particals].show();
         wkr[particals].update();
     }
-    if (random(1) < 0.01 && mouseX >= radius && mouseX <= width-radius) {
+    if (random(1) < 0.01 && mouseX >= radius && mouseX <= width - radius) {
         if (mouseIsPressed) {
             //wkr.push(new walker(mouseX, mouseY, startDis, radius));
         }
