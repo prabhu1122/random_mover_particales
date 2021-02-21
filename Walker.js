@@ -20,7 +20,7 @@ class walker {
             ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
             strokeWeight(strok);
             stroke(10);
-            point(this.pos.x, this.pos.y);
+            //point(this.pos.x, this.pos.y);
             fill('orange');
             noStroke();
             //ellipse(mouseX, mouseY, 20,20);
