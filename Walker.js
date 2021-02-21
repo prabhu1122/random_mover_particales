@@ -32,7 +32,7 @@ class walker {
 
         this.update = function() {
             this.mouse = createVector(mouseX, mouseY);
-            //this.acc = p5.Vector.sub(this.mouse, this.pos);
+            this.acc = p5.Vector.sub(this.mouse, this.pos);
             this.acc.setMag(.1);
             this.vel.add(this.acc);
             this.vel.limit(3);
