@@ -55,7 +55,7 @@ class walker {
     }
 
     this.setBounderies = function() {
-         * 
+      if (this.pos.x >= innerWidth - this.radius) {
         this.vel.x *= -.8;
       }
       if (this.pos.x <= this.radius) {
@@ -72,7 +72,7 @@ class walker {
      * Check the distance b/w thw two particles
      * @param object | other | An other particles
      * @param float |distance| The distance b/w the particales
-
+     * 
      */
 
     this.checkDist = function(other) {
