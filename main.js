@@ -1,39 +1,41 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var wkr = [];
-var boxSize = 8;
+var boxSize = 50;
 var dis;
 var radius = 5;
 var startDis = 40;
 
 function setup() {
-    // body...
-    createCanvas(displayWidth, displayHeight - 80);
-    for (var particals = 0; particals < boxSize; particals++) {
-        wkr.push(new walker(random(radius, width - radius), random(radius, height - radius), startDis, radius));
-    }
+  // body...
+  createCanvas(displayWidth, displayHeight - 80);
+  for (var particals = 0; particals < boxSize; particals++) {
+    wkr.push(new walker(random(radius, width - radius), random(radius, height - radius), startDis, radius));
+  }
 }
 
 function draw() {
-    // body...
-    background(255);
-    for (var particals = 0; particals < wkr.length; particals++) {
-        for (var other = particals; other < wkr.length; other++) {
-            let d = wkr[particals].checkDist(wkr[other]);
-            if (d < startDis) {
-                if (d <= 2 * radius) {
-                    wkr[particals].resolveCollision(wkr[other]);
-                }
-                wkr[particals].connect(wkr[other]);
-                wkr[particals].attract(wkr[other]);
-            }
+  // body...
+  background(255);
+  for (var partical = 0; partical < wkr.length; partical++) {
+    for (var other = partical; other < wkr.length; other++) {
+      let d = wkr[partical].checkDist(wkr[other]);
+      if (d < startDis) {
+        if (d <= 2 * radius) {
+          wkr[partical].resolveCollision(wkr[other]);
         }
-        wkr[particals].show();
-        wkr[particals].update();
+        wkr[partical].connect(wkr[other]);
+        wkr[partical].attract(wkr[other]);
+      }
     }
-    if (random(1) < 0.01 && mouseX >= radius && mouseX <= width - radius) {
-        if (mouseIsPressed) {
-            //wkr.push(new walker(mouseX, mouseY, startDis, radius));
-        }
-        //wkr.push(new walker(mouseX, mouseY, startDis, radius));
+    wkr[partical].show();
+    wkr[partical].update();
+  }
+  for (var partical = 0; partical < wkr.length; partical++) {
+    for (var other = partical; other < wkr.length; other++) {
+      let d = wkr[partical].checkDist(wkr[other]);
+      if (d < 2 * radius) {
+        wkr.splice(wkr.indexOf(other),0);
+      }
     }
+  }
 }
