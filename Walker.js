@@ -3,19 +3,23 @@
 var strok = 4;
 
 class walker {
-  constructor(x, y, d, r) {
+  constructor(x, y, d, r,c) {
+    //colorMode(HSB,10);
     this.radius = r;
     this.startConDist = d;
+    this.col= c;
     this.pos = createVector(x, y);
     //this.vel = createVector(0, 0);
     this.vel = createVector(random(-.51, .51), random(-.51, .51));
-    //this.acc = createVector(0, 0);
-    // this.acc = createVector(random(-1, 1), random(-1, 1))
+    this.acc = createVector(0, 0);
+    this.acc = createVector(random(-1, 1), random(-1, 1))
 
     this.show = function() {
       // body...
       noFill();
-      stroke(50);
+      //console.log(this.col[random(0,5)]);
+      //stroke(color(this.col[random(0,5)]));
+      stroke(this.col);
       strokeWeight(1);
       ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
       strokeWeight(strok);
@@ -32,7 +36,7 @@ class walker {
       //this.acc = p5.Vector.sub(this.mouse, this.pos);
       this.acc.setMag(.01);
       this.vel.add(this.acc);
-      this.vel.limit(1);
+      this.vel.limit(2);
       this.pos.add(this.vel);
       //this.setBounderies();
       this.noBounderies();
@@ -94,7 +98,7 @@ class walker {
       let dis = this.checkDist(other);
       let lifespan = map(dis, this.startConDist, 0, 0, 255);
       let thikness = map(lifespan, 0, 50, 0, .51);
-      stroke(50, lifespan);
+      stroke(120,50,100, lifespan);
       strokeWeight(thikness);
       line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
     }
@@ -108,7 +112,6 @@ class walker {
      */
     this.attract = function(other) {
       this.acc = p5.Vector.sub(other.pos, this.pos);
-      //return this.acc;
     }
 
     //collision resolving
@@ -158,8 +161,8 @@ class walker {
         // Store mass in var for better readability in collision equation
         //const m1 = this.mass;
         //const m2 = other.mass;
-        const m1 = 1;
-        const m2 = 1;
+        const m1 = other.radius;
+        const m2 = this.radius;
         // Velocity before equation
 
         const u1 = rotateAng(this.vel, angle);
