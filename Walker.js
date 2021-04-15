@@ -48,13 +48,13 @@ class walker {
         this.pos.x = -this.radius + 1;
       }
       if (this.pos.x <= -this.radius) {
-        this.pos.x = innerWidth - this.radius + 1;
+        this.pos.x = innerWidth + this.radius;
       }
       if (this.pos.y >= innerHeight + this.radius) {
         this.pos.y = -this.radius + 1;
       }
       if (this.pos.y <= -this.radius) {
-        this.pos.y = innerHeight - this.radius + 1;
+        this.pos.y = innerHeight + this.radius;
       }
     }
 

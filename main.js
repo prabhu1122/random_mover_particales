@@ -1,26 +1,51 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var wkr = [];
-var r = [];
-var boxSize = 40;
-var dis;
-var radius;
+var radius = [];
+var boxSize = 50;
+var x, y, dis, button;
+var rad = 12;
 var startDis = 40;
-var col = ['red', 'purple', 'green', 'pink', 'black', 'orange','cyan','yellow','blue'];
+var col = ['red', 'purple', 'green', 'pink', 'white', 'orange', 
+'cyan', 'yellow', 'blue', 'gray', 'brown', 'skyblue', 'lightgreen'];
+
+function distanceCheck(x1, y1, x2, y2, r1, r2) {
+  var dx = x2 - x1;
+  var dy = y2 - y1;
+  var dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+  if (dist < r1 + r1) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 function setup() {
   // body...
-  createCanvas(displayWidth, displayHeight - 80);
-  for (var particals = 0; particals < boxSize; particals++) {
-    radius = getRandom(11);
-    r.push(radius);
-    wkr.push(new walker(random(radius, width - radius), random(radius, height - radius), startDis, radius, col[5]));
+  colorMode(HSB);
+  createCanvas(innerWidth, innerHeight);
+  for (var i = 0; i < boxSize; i++) {
+    rad = getRandom(5, 20);
+    x = getRandom(rad, innerWidth - rad);
+    y = getRandom(rad, innerHeight - rad);
+    if (i !== 0) {
+      for (var j = 0; j < wkr.length; j++) {
+        //check the touch between ball so that they don't overlap on eachother
+        if (distanceCheck(x, y, wkr[j].pos.x, wkr[j].pos.y, radius[i], radius[j])) {
+          x = getRandom(rad, innerWidth - rad);
+          y = getRandom(rad, innerHeight - rad);
+          j = -1; //call same loop till the new ball got no overlap
+        }
+      }
+    }
+    radius.push(rad);
+    wkr.push(new walker(x, y, startDis, radius[i], col[getRandom(0, col.length)]));
   }
-  console.log(r);
+  button = createButton('Go');
 }
 
 function draw() {
   // body...
-  background(255);
+  background(0);
   for (var partical = 0; partical < wkr.length; partical++) {
     for (var other = partical; other < wkr.length; other++) {
       let d = wkr[partical].checkDist(wkr[other]);
@@ -32,11 +57,12 @@ function draw() {
         wkr[partical].attract(wkr[other]);
       }
     }
+
     wkr[partical].show();
     wkr[partical].update();
   }
 }
 
-function getRandom(limit) {
-  return Math.ceil(Math.random() * limit);
+function getRandom(l, h) {
+  return Math.floor(Math.random() * (h - l) + l);
 }
