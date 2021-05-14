@@ -20,6 +20,7 @@ class walker {
       //console.log(this.col[random(0,5)]);
       //stroke(color(this.col[random(0,5)]));
       stroke(this.col);
+      //fill(this.col);
       strokeWeight(1);
       ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
       strokeWeight(strok);
@@ -31,12 +32,12 @@ class walker {
      * @param mathod | update
      */
 
-    this.update = function() {
+    this.update = function(a=2,f) {
       this.mouse = createVector(mouseX, mouseY);
       //this.acc = p5.Vector.sub(this.mouse, this.pos);
-      this.acc.setMag(.01);
+      this.acc.setMag(f);
       this.vel.add(this.acc);
-      this.vel.limit(2);
+      this.vel.limit(a);
       this.pos.add(this.vel);
       //this.setBounderies();
       this.noBounderies();
@@ -44,28 +45,28 @@ class walker {
     }
 
     this.noBounderies = function() {
-      if (this.pos.x >= innerWidth + this.radius) {
+      if (this.pos.x >= width + this.radius) {
         this.pos.x = -this.radius + 1;
       }
       if (this.pos.x <= -this.radius) {
-        this.pos.x = innerWidth + this.radius;
+        this.pos.x = width + this.radius;
       }
-      if (this.pos.y >= innerHeight + this.radius) {
+      if (this.pos.y >= height + this.radius) {
         this.pos.y = -this.radius + 1;
       }
       if (this.pos.y <= -this.radius) {
-        this.pos.y = innerHeight + this.radius;
+        this.pos.y = height + this.radius;
       }
     }
 
     this.setBounderies = function() {
-      if (this.pos.x >= innerWidth - this.radius) {
+      if (this.pos.x >= width - this.radius) {
         this.vel.x *= -.8;
       }
       if (this.pos.x <= this.radius) {
         this.vel.x *= -.8;
       }
-      if (this.pos.y >= innerHeight - this.radius) {
+      if (this.pos.y >= height - this.radius) {
         this.vel.y *= -.8;
       }
       if (this.pos.y <= this.radius) {
@@ -98,7 +99,7 @@ class walker {
       let dis = this.checkDist(other);
       let lifespan = map(dis, this.startConDist, 0, 0, 255);
       let thikness = map(lifespan, 0, 50, 0, .51);
-      stroke(120,50,100, lifespan);
+      stroke(200,150,100, lifespan);
       strokeWeight(thikness);
       line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
     }

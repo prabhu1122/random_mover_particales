@@ -1,11 +1,12 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var wkr = [];
 var radius = [];
-var boxSize = 50;
-var x, y, dis, button;
+var boxSize = 40;
+var x, y, dis, button, menu, val;
 var rad = 12;
+var btnCheck = false;
 var startDis = 40;
-var col = ['red', 'purple', 'green', 'pink', 'white', 'orange', 
+var col = ['red', 'purple', 'green', 'pink', 'white', 'orange',
 'cyan', 'yellow', 'blue', 'gray', 'brown', 'skyblue', 'lightgreen'];
 
 function distanceCheck(x1, y1, x2, y2, r1, r2) {
@@ -24,13 +25,13 @@ function setup() {
   colorMode(HSB);
   createCanvas(innerWidth, innerHeight);
   for (var i = 0; i < boxSize; i++) {
-    rad = getRandom(5, 20);
+    rad = getRandom(3, 10);
     x = getRandom(rad, innerWidth - rad);
     y = getRandom(rad, innerHeight - rad);
     if (i !== 0) {
       for (var j = 0; j < wkr.length; j++) {
         //check the touch between ball so that they don't overlap on eachother
-        if (distanceCheck(x, y, wkr[j].pos.x, wkr[j].pos.y, radius[i], radius[j])) {
+        if (distanceCheck(x, y, wkr[j].pos.x, wkr[j].pos.y, radius[j], radius[i])) {
           x = getRandom(rad, innerWidth - rad);
           y = getRandom(rad, innerHeight - rad);
           j = -1; //call same loop till the new ball got no overlap
@@ -40,12 +41,11 @@ function setup() {
     radius.push(rad);
     wkr.push(new walker(x, y, startDis, radius[i], col[getRandom(0, col.length)]));
   }
-  button = createButton('Go');
 }
 
 function draw() {
   // body...
-  background(0);
+  background('black');
   for (var partical = 0; partical < wkr.length; partical++) {
     for (var other = partical; other < wkr.length; other++) {
       let d = wkr[partical].checkDist(wkr[other]);
@@ -59,10 +59,11 @@ function draw() {
     }
 
     wkr[partical].show();
-    wkr[partical].update();
+    wkr[partical].update(val, .01);
   }
 }
 
 function getRandom(l, h) {
   return Math.floor(Math.random() * (h - l) + l);
 }
+
