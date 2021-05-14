@@ -21,5 +21,5 @@ This project is created with:
 
 ## How to get
 Just download zip file of it and use in your code
-[Here](prabhu1122/website_python_djangoServer)
+[Here](https://github.com/prabhu1122/random_mover_particales/archive/refs/heads/master.zip)
 
