@@ -13,11 +13,11 @@
 ## General info
 This project is create an canvas for draw an different type of widgets.
 
-## Technologies
+## Language
 This project is created with:
 * `html`
 * `js`
-* `p5js library`
+* `p5js` sketch library
 
 ## How to get
 Just download zip file of it and use in your code
