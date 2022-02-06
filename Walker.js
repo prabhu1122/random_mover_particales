@@ -3,11 +3,11 @@
 var strok = 4;
 
 class walker {
-  constructor(x, y, d, r,c) {
+  constructor(x, y, d, r, c) {
     //colorMode(HSB,10);
     this.radius = r;
     this.startConDist = d;
-    this.col= c;
+    this.col = c;
     this.pos = createVector(x, y);
     //this.vel = createVector(0, 0);
     this.vel = createVector(random(-.51, .51), random(-.51, .51));
@@ -32,7 +32,7 @@ class walker {
      * @param mathod | update
      */
 
-    this.update = function(a=2,f) {
+    this.update = function(a = 2, f) {
       this.mouse = createVector(mouseX, mouseY);
       //this.acc = p5.Vector.sub(this.mouse, this.pos);
       this.acc.setMag(f);
@@ -99,7 +99,7 @@ class walker {
       let dis = this.checkDist(other);
       let lifespan = map(dis, this.startConDist, 0, 0, 255);
       let thikness = map(lifespan, 0, 50, 0, .51);
-      stroke(200,150,100, lifespan);
+      stroke(200, 150, 100, lifespan);
       strokeWeight(thikness);
       line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
     }
