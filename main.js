@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var wkr = [];
 var radius = [];
-var boxSize = 40;
-var x, y, dis, button, menu, val;
+var boxSize = 60;
+var x, y, dis, button, menu;
 var rad = 12;
 var btnCheck = false;
-var startDis = 40;
-var col = ['red', 'purple', 'green', 'pink', 'white', 'orange',
+var startDis = 60;
+var col = ['red', 'purple', 'green', 'pink', 'black', 'orange',
 'cyan', 'yellow', 'blue', 'gray', 'brown', 'skyblue', 'lightgreen'];
 
 function distanceCheck(x1, y1, x2, y2, r1, r2) {
@@ -25,7 +25,7 @@ function setup() {
   colorMode(HSB);
   createCanvas(innerWidth, innerHeight);
   for (var i = 0; i < boxSize; i++) {
-    rad = getRandom(3, 10);
+    //rad = getRandom(3, 10);
     x = getRandom(rad, innerWidth - rad);
     y = getRandom(rad, innerHeight - rad);
     if (i !== 0) {
@@ -39,31 +39,29 @@ function setup() {
       }
     }
     radius.push(rad);
-    wkr.push(new walker(x, y, startDis, radius[i], col[getRandom(0, col.length)]));
+    wkr.push(new walker(x, y, startDis, rad, col[getRandom(0, col.length)]));
   }
 }
 
 function draw() {
   // body...
-  background('black');
-  for (var partical = 0; partical < wkr.length; partical++) {
-    for (var other = partical; other < wkr.length; other++) {
-      let d = wkr[partical].checkDist(wkr[other]);
-      if (d < startDis) {
-        if (d <= wkr[partical].radius + wkr[other].radius) {
-          wkr[partical].resolveCollision(wkr[other]);
+  background('white');
+  wkr.forEach((each, eachIndex) => {
+    wkr.forEach((other, otherIndex) => {
+      if (each.distance(other) < startDis) {
+        if (each.distance(other) <= 2 * rad) {
+          each.resolveCollision(other);
         }
-        wkr[partical].connect(wkr[other]);
-        wkr[partical].attract(wkr[other]);
+        //each.connect(other);
+        //each.attract(other);
       }
-    }
-
-    wkr[partical].show();
-    wkr[partical].update(val, .01);
-  }
+    });
+    each.show();
+    each.update(2, .1);
+    each.setBoundry(true);
+  });
 }
 
 function getRandom(l, h) {
   return Math.floor(Math.random() * (h - l) + l);
 }
-

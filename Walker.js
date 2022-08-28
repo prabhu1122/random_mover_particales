@@ -9,15 +9,14 @@ class walker {
     this.startConDist = d;
     this.col = c;
     this.pos = createVector(x, y);
-    //this.vel = createVector(0, 0);
-    this.vel = createVector(random(-.51, .51), random(-.51, .51));
-    this.acc = createVector(0, 0);
-    this.acc = createVector(random(-1, 1), random(-1, 1))
+    this.vel = createVector(0, 0);
+    this.acc = createVector(0, .01);
+    //this.vel = p5.Vector.random2D();
+    //this.acc = p5.Vector.random2D(0, .9);
 
     this.show = function() {
       // body...
       noFill();
-      //console.log(this.col[random(0,5)]);
       //stroke(color(this.col[random(0,5)]));
       stroke(this.col);
       //fill(this.col);
@@ -25,65 +24,58 @@ class walker {
       ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
       strokeWeight(strok);
       stroke(10);
-      //point(this.pos.x, this.pos.y);
     }
     /**
      * This is use as animate the sketch
      * @param mathod | update
+     * @return none | void
      */
 
-    this.update = function(a = 2, f) {
+    this.update = function(a, f) {
       this.mouse = createVector(mouseX, mouseY);
       //this.acc = p5.Vector.sub(this.mouse, this.pos);
+      //this.acc.normalize();
       this.acc.setMag(f);
       this.vel.add(this.acc);
       this.vel.limit(a);
       this.pos.add(this.vel);
-      //this.setBounderies();
-      this.noBounderies();
-
     }
 
-    this.noBounderies = function() {
-      if (this.pos.x >= width + this.radius) {
-        this.pos.x = -this.radius + 1;
-      }
-      if (this.pos.x <= -this.radius) {
-        this.pos.x = width + this.radius;
-      }
-      if (this.pos.y >= height + this.radius) {
-        this.pos.y = -this.radius + 1;
-      }
-      if (this.pos.y <= -this.radius) {
-        this.pos.y = height + this.radius;
-      }
-    }
-
-    this.setBounderies = function() {
-      if (this.pos.x >= width - this.radius) {
-        this.vel.x *= -.8;
-      }
-      if (this.pos.x <= this.radius) {
-        this.vel.x *= -.8;
-      }
-      if (this.pos.y >= height - this.radius) {
-        this.vel.y *= -.8;
-      }
-      if (this.pos.y <= this.radius) {
-        this.vel.y *= -.8;
+    this.setBoundry = function(boolean) {
+      if (boolean === true) {
+        if (this.pos.y >= height - this.radius) {
+          this.pos.y = height - this.radius;
+          this.vel.y *= -1;
+        }
+        if (this.pos.y <= this.radius) {
+          this.pos.y = this.radius;
+          this.vel.y *= -1;
+        }
+        if (this.pos.x >= width - this.radius) {
+          this.pos.x = width - this.radius;
+          this.vel.x *= -1;
+        }
+        if (this.pos.x <= this.radius) {
+          this.pos.x = this.radius;
+          this.vel.x *= -1;
+        }
+      }else{
+        this.vel.x *= 1;
+        this.vel.y *= 1;
       }
     }
+    
     /**
      * Check the distance b/w thw two particles
      * @param object | other | An other particles
-     * @param float |distance| The distance b/w the particales
+     * @return float |distance| The distance b/w the particales
      * 
      */
 
-    this.checkDist = function(other) {
-      var dx = this.pos.x - other.pos.x;
-      var dy = this.pos.y - other.pos.y;
-      var distance = Math.sqrt(((this.pos.x - other.pos.x) * (this.pos.x - other.pos.x)) + ((this.pos.y - other.pos.y) * (this.pos.y - other.pos.y)));
+    this.distance = function(other) {
+      let dx = this.pos.x - other.pos.x;
+      let dy = this.pos.y - other.pos.y;
+      let distance = Math.sqrt(((this.pos.x - other.pos.x) * (this.pos.x - other.pos.x)) + ((this.pos.y - other.pos.y) * (this.pos.y - other.pos.y)));
       return distance;
     }
     // checking the outer circle distance and return dist    
@@ -96,12 +88,13 @@ class walker {
     }
 
     this.connect = function(other) {
-      let dis = this.checkDist(other);
+      let dis = this.distance(other);
       let lifespan = map(dis, this.startConDist, 0, 0, 255);
-      let thikness = map(lifespan, 0, 50, 0, .51);
+      let thikness = map(lifespan, 0, 50, 0, .15);
       stroke(200, 150, 100, lifespan);
       strokeWeight(thikness);
       line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
+      ellipse(this.pos.x, this.pos.y, 2)
     }
 
     /**
@@ -120,9 +113,8 @@ class walker {
     //Utility functions
     /**
      * Rotates coordinate system for velocities
-     *
+
      * Takes velocities and alters them as if the coordinate system they're on was rotated
-     *
      * @param  Object | velocity | The velocity of an individual particle
      * @param  Float  | angle    | The angle of collision between two objects in radians
      * @return Object | The altered x and y velocities after the coordinate system has been rotated
