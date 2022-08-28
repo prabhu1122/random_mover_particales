@@ -10,9 +10,6 @@ class walker {
     this.col = c;
     this.pos = createVector(x, y);
     this.vel = createVector(0, 0);
-    this.acc = createVector(0, .01);
-    //this.vel = p5.Vector.random2D();
-    //this.acc = p5.Vector.random2D(0, .9);
 
     this.show = function() {
       // body...
@@ -24,6 +21,9 @@ class walker {
       ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
       strokeWeight(strok);
       stroke(10);
+      strokeWeight(1);
+      fill('black');
+      ellipse(this.pos.x, this.pos.y, 2)
     }
     /**
      * This is use as animate the sketch
@@ -32,39 +32,13 @@ class walker {
      */
 
     this.update = function(a, f) {
-      this.mouse = createVector(mouseX, mouseY);
+      //this.mouse = createVector(mouseX, mouseY);
       //this.acc = p5.Vector.sub(this.mouse, this.pos);
-      //this.acc.normalize();
       this.acc.setMag(f);
       this.vel.add(this.acc);
       this.vel.limit(a);
       this.pos.add(this.vel);
     }
-
-    this.setBoundry = function(boolean) {
-      if (boolean === true) {
-        if (this.pos.y >= height - this.radius) {
-          this.pos.y = height - this.radius;
-          this.vel.y *= -1;
-        }
-        if (this.pos.y <= this.radius) {
-          this.pos.y = this.radius;
-          this.vel.y *= -1;
-        }
-        if (this.pos.x >= width - this.radius) {
-          this.pos.x = width - this.radius;
-          this.vel.x *= -1;
-        }
-        if (this.pos.x <= this.radius) {
-          this.pos.x = this.radius;
-          this.vel.x *= -1;
-        }
-      }else{
-        this.vel.x *= 1;
-        this.vel.y *= 1;
-      }
-    }
-    
     /**
      * Check the distance b/w thw two particles
      * @param object | other | An other particles
@@ -94,7 +68,7 @@ class walker {
       stroke(200, 150, 100, lifespan);
       strokeWeight(thikness);
       line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
-      ellipse(this.pos.x, this.pos.y, 2)
+      
     }
 
     /**
@@ -106,6 +80,30 @@ class walker {
      */
     this.attract = function(other) {
       this.acc = p5.Vector.sub(other.pos, this.pos);
+    }
+
+    this.setBoundry = function(boolean) {
+      if (boolean === true) {
+        if (this.pos.y >= height - this.radius) {
+          this.pos.y = height - this.radius;
+          this.vel.y *= -1;
+        }
+        if (this.pos.y <= this.radius) {
+          this.pos.y = this.radius;
+          this.vel.y *= -1;
+        }
+        if (this.pos.x >= width - this.radius) {
+          this.pos.x = width - this.radius;
+          this.vel.x *= -1;
+        }
+        if (this.pos.x <= this.radius) {
+          this.pos.x = this.radius;
+          this.vel.x *= -1;
+        }
+      } else {
+        this.vel.x *= 1;
+        this.vel.y *= 1;
+      }
     }
 
     //collision resolving
@@ -125,7 +123,6 @@ class walker {
         x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
         y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle)
       };
-
       return rotatedVelocities;
     }
 
