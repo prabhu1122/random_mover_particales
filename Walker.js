@@ -3,12 +3,12 @@
 var strok = 4;
 
 class walker {
-  constructor(x, y, d, r, c) {
+  constructor(pos, d, r, c, e) {
     //colorMode(HSB,10);
     this.radius = r;
     this.startConDist = d;
     this.col = c;
-    this.pos = createVector(x, y);
+    this.pos = pos;
     this.vel = createVector(0, 0);
 
     this.show = function() {
@@ -19,11 +19,11 @@ class walker {
       //fill(this.col);
       strokeWeight(1);
       ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
-      strokeWeight(strok);
+      /*strokeWeight(strok);
       stroke(10);
       strokeWeight(1);
       fill('black');
-      ellipse(this.pos.x, this.pos.y, 2)
+      ellipse(this.pos.x, this.pos.y, 2);*/
     }
     /**
      * This is use as animate the sketch
@@ -31,9 +31,11 @@ class walker {
      * @return none | void
      */
 
-    this.update = function(a, f) {
-      //this.mouse = createVector(mouseX, mouseY);
-      //this.acc = p5.Vector.sub(this.mouse, this.pos);
+    this.update = function(acc, a, f) {
+      this.mouse = createVector(mouseX, mouseY);
+      this.acc = p5.Vector.sub(this.mouse, this.pos);
+      //comment the line below to de-activate gyrosensor
+      this.acc = acc;
       this.acc.setMag(f);
       this.vel.add(this.acc);
       this.vel.limit(a);
@@ -68,7 +70,7 @@ class walker {
       stroke(200, 150, 100, lifespan);
       strokeWeight(thikness);
       line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
-      
+
     }
 
     /**
@@ -86,23 +88,22 @@ class walker {
       if (boolean === true) {
         if (this.pos.y >= height - this.radius) {
           this.pos.y = height - this.radius;
-          this.vel.y *= -1;
+          this.vel.y *= -e;
         }
         if (this.pos.y <= this.radius) {
           this.pos.y = this.radius;
-          this.vel.y *= -1;
+          this.vel.y *= -e;
         }
         if (this.pos.x >= width - this.radius) {
           this.pos.x = width - this.radius;
-          this.vel.x *= -1;
+          this.vel.x *= -e;
         }
         if (this.pos.x <= this.radius) {
           this.pos.x = this.radius;
-          this.vel.x *= -1;
+          this.vel.x *= -e;
         }
       } else {
-        this.vel.x *= 1;
-        this.vel.y *= 1;
+        this.vel.mult(1);
       }
     }
 
@@ -149,18 +150,18 @@ class walker {
         const angle = -Math.atan2(other.pos.y - this.pos.y, other.pos.x - this.pos.x);
 
         // Store mass in var for better readability in collision equation
-        //const m1 = this.mass;
-        //const m2 = other.mass;
-        const m1 = other.radius;
-        const m2 = this.radius;
+        const m1 = 1;
+        const m2 = 1;
+        //const m1 = other.radius;
+        //const m2 = this.radius;
         // Velocity before equation
 
         const u1 = rotateAng(this.vel, angle);
         const u2 = rotateAng(other.vel, angle);
 
         // Velocity after 1d collision equation
-        const v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2 / (m1 + m2), y: u1.y };
-        const v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2 / (m1 + m2), y: u2.y };
+        const v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2  / (m1 + m2), y: u1.y };
+        const v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2  / (m1 + m2), y: u2.y };
 
         // Final velocity after rotating axis back to original location
         const vFinal1 = rotateAng(v1, -angle);

@@ -1,11 +1,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var wkr = [];
 var radiusBox = [];
-var boxSize = 50;
-var x, y, dis, button, menu;
-var rad = 12;
-var btnCheck = false;
-var startDis = 40;
+var boxSize = 2;
+var rad = 5;
+var eccentricity = 0.7;
+var startDis = 60;
+var acc;
 var col = ['red', 'purple', 'green', 'pink', 'black', 'orange',
 'cyan', 'yellow', 'blue', 'gray', 'brown', 'skyblue', 'lightgreen'];
 
@@ -29,7 +29,7 @@ function setup() {
   colorMode(HSB);
   createCanvas(innerWidth, innerHeight);
   for (var i = 0; i < boxSize; i++) {
-    rad = getRandom(3, 10);
+    //rad = getRandom(3, 10);
     x = getRandom(rad, innerWidth - rad);
     y = getRandom(rad, innerHeight - rad);
     if (i !== 0) {
@@ -38,30 +38,38 @@ function setup() {
         if (distanceCheck(x, y, wkr[j].pos.x, wkr[j].pos.y, radiusBox[j], radiusBox[i])) {
           x = getRandom(rad, innerWidth - rad);
           y = getRandom(rad, innerHeight - rad);
-          j = -1; //call same loop till the new ball got no overlap
+          j = -1; //loop till the new ball got no overlap
         }
       }
     }
     radiusBox.push(rad);
-    wkr.push(new walker(x, y, startDis, radiusBox[i], col[getRandom(0, col.length)]));
+    pos = createVector(x, y);
+    wkr.push(new walker(pos, startDis, radiusBox[i], col[getRandom(0, col.length)], eccentricity));
   }
 }
 
 function draw() {
-  // body...
-  background('white');
+  background('#F0FFFF');
   wkr.forEach((each, eachIndex) => {
     wkr.forEach((other, otherIndex) => {
       if (each.distance(other) < startDis) {
         if (each.distance(other) <= each.radius + other.radius) {
           each.resolveCollision(other);
         }
-        each.connect(other);
+        //each.connect(other);
         each.attract(other);
       }
     });
     each.show();
-    each.update(1.5, .01); //update(velocity limit, acc limit)
+    each.update(acc, 5, .05); //update(velocity limit, acc limit)
     each.setBoundry(true);
   });
 }
+
+window.addEventListener("deviceorientation", (event) => {
+  acc = createVector(event.gamma.toFixed(0) * .1, event.beta.toFixed() * .1);
+});
+
+window.addEventListener("devicemotion", (event) => {
+  acceleration = event.acceleration.y.toFixed(5);
+});
